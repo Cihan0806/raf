@@ -1,0 +1,17 @@
+# Derleme çıktıları
+bin/
+obj/
+
+# kur.ps1 ve paketle.ps1 çıktıları (yayımlanmış program ve kurulum paketi)
+/dist/
+/paket/
+
+# Düzenleyici ve kullanıcıya özel dosyalar
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Test çıktıları
+TestResults/

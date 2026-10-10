@@ -1,0 +1,325 @@
+<local:ChromeWindow x:Class="Raf.App.MainWindow"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Raf.App"
+                    xmlns:v="clr-namespace:Raf.App.Views"
+                    Title="Raf" Width="1080" Height="700" MinWidth="820" MinHeight="520"
+                    WindowStartupLocation="CenterScreen" AllowDrop="True" Icon="/Assets/raf.ico"
+                    PreviewKeyDown="Window_PreviewKeyDown" PreviewTextInput="Window_PreviewTextInput"
+                    DragOver="Window_DragOver" DragLeave="Window_DragLeave" Drop="Window_Drop">
+    <Window.Resources>
+        <!-- Öğe listesinin iki görünümü: kutucuklar ve ayrıntı satırları. Hangisinin kullanılacağını kod seçer. -->
+        <ItemsPanelTemplate x:Key="TilePanel">
+            <WrapPanel/>
+        </ItemsPanelTemplate>
+        <ItemsPanelTemplate x:Key="RowPanel">
+            <StackPanel/>
+        </ItemsPanelTemplate>
+
+        <DataTemplate x:Key="TileTemplate">
+            <Grid Width="94" ToolTip="{Binding Tip}" ToolTipService.InitialShowDelay="700" Background="Transparent">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="46"/>
+                    <RowDefinition Height="38"/>
+                </Grid.RowDefinitions>
+                <Image Source="{Binding Icon}" MaxWidth="76" Height="44" HorizontalAlignment="Center"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                <Border Visibility="{Binding LinkVisibility}" Width="18" Height="18" CornerRadius="9"
+                        HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="36,0,0,0"
+                        Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1">
+                    <TextBlock Text="&#xE71B;" Style="{StaticResource Icon}" FontSize="9" HorizontalAlignment="Center"
+                               Foreground="{DynamicResource AccentBrush}"/>
+                </Border>
+                <TextBlock Grid.Row="1" Text="{Binding Name}" FontSize="12" LineHeight="16" MaxHeight="32"
+                           LineStackingStrategy="BlockLineHeight" Margin="0,5,0,0" TextAlignment="Center"
+                           TextWrapping="Wrap" TextTrimming="CharacterEllipsis" VerticalAlignment="Top"/>
+            </Grid>
+        </DataTemplate>
+
+        <!-- Sütun genişlikleri aşağıdaki DetailsHeader ile aynı olmalı. -->
+        <DataTemplate x:Key="RowTemplate">
+            <Grid ToolTip="{Binding Tip}" ToolTipService.InitialShowDelay="900" Background="Transparent">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="32"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="112"/>
+                    <ColumnDefinition Width="84"/>
+                    <ColumnDefinition Width="132"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{Binding Icon}" Width="22" Height="22" HorizontalAlignment="Left"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+                <TextBlock Text="&#xE71B;" Style="{StaticResource Icon}" FontSize="9" Visibility="{Binding LinkVisibility}"
+                           HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="15,0,0,0"
+                           Foreground="{DynamicResource AccentBrush}"/>
+                <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Margin="0,0,12,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding TypeText}" FontSize="12.5" VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis" Foreground="{DynamicResource MutedBrush}"/>
+                <TextBlock Grid.Column="3" Text="{Binding SizeText}" FontSize="12.5" VerticalAlignment="Center"
+                           TextAlignment="Right" Margin="0,0,16,0" Foreground="{DynamicResource MutedBrush}"/>
+                <TextBlock Grid.Column="4" Text="{Binding DateText}" FontSize="12.5" VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis" Foreground="{DynamicResource MutedBrush}"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="52"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="222"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.RowSpan="2" Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,0,1,0"/>
+
+        <!-- Üst şerit: pencere buradan tutulup sürüklenir -->
+        <StackPanel Orientation="Horizontal" Margin="19,0,0,0" VerticalAlignment="Center">
+            <Image Source="/Assets/raf.png" Width="22" Height="22" RenderOptions.BitmapScalingMode="HighQuality"/>
+            <TextBlock Text="Raf" FontSize="16" FontWeight="SemiBold" Margin="10,0,0,0" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <Grid Grid.Column="1" Margin="18,0,8,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100*" MaxWidth="520"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid VerticalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="True">
+                <TextBox x:Name="SearchBox" Style="{StaticResource Input}" Padding="36,8,10,8"
+                         Tag="Ara: ad, uzantı (pdf) ya da dosyanın içindeki bir ifade"
+                         TextChanged="SearchBox_TextChanged" PreviewKeyDown="SearchBox_PreviewKeyDown"/>
+                <TextBlock Text="&#xE721;" Style="{StaticResource Icon}" Foreground="{DynamicResource MutedBrush}"
+                           Margin="13,0,0,0" HorizontalAlignment="Left" IsHitTestVisible="False"/>
+            </Grid>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
+                        WindowChrome.IsHitTestVisibleInChrome="True">
+                <StackPanel x:Name="ViewTools" Orientation="Horizontal">
+                    <Button x:Name="ViewButton" Style="{StaticResource BtnGhost}" Click="ViewButton_Click">
+                        <TextBlock x:Name="ViewGlyph" Style="{StaticResource Icon}" Foreground="{DynamicResource MutedBrush}"/>
+                    </Button>
+                    <Button x:Name="SortButton" Style="{StaticResource BtnGhost}" Click="SortButton_Click" ToolTip="Sırala">
+                        <TextBlock Text="&#xE8CB;" Style="{StaticResource Icon}" Foreground="{DynamicResource MutedBrush}"/>
+                    </Button>
+                    <Button x:Name="PreviewButton" Style="{StaticResource BtnGhost}" Click="PreviewButton_Click">
+                        <TextBlock x:Name="PreviewGlyph" Text="&#xE90D;" Style="{StaticResource Icon}" Foreground="{DynamicResource MutedBrush}"/>
+                    </Button>
+                    <Border Width="1" Height="18" Margin="6,0" Background="{DynamicResource LineBrush}"/>
+                </StackPanel>
+                <Button Style="{StaticResource BtnGhost}" Click="Hide_Click"
+                        ToolTip="Gizle (Esc). Raf arka planda çalışmaya devam eder.">
+                    <TextBlock Text="&#xE8BB;" Style="{StaticResource Icon}" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Kenar çubuğu -->
+        <DockPanel Grid.Row="1" Margin="10,2,10,10">
+            <StackPanel DockPanel.Dock="Bottom">
+                <Border Height="1" Margin="4,8" Background="{DynamicResource LineBrush}"/>
+                <RadioButton x:Name="CategoriesRadio" GroupName="Pages" Style="{StaticResource NavRadio}" Tag="&#xE8EC;"
+                             Content="Kategoriler ve kurallar" Checked="PageRadio_Checked"/>
+                <RadioButton x:Name="HistoryRadio" GroupName="Pages" Style="{StaticResource NavRadio}" Tag="&#xE81C;"
+                             Content="Geçmiş" Checked="PageRadio_Checked"/>
+                <RadioButton x:Name="SettingsRadio" GroupName="Pages" Style="{StaticResource NavRadio}" Tag="&#xE713;"
+                             Content="Ayarlar" Checked="PageRadio_Checked"/>
+            </StackPanel>
+
+            <ListBox x:Name="Nav" Style="{StaticResource PlainList}" SelectionChanged="Nav_SelectionChanged">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource NavItem}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsHeader}" Value="True">
+                                <Setter Property="IsEnabled" Value="False"/>
+                                <Setter Property="AllowDrop" Value="False"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <ContentPresenter/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <TextBlock Text="{Binding Title}" Visibility="{Binding HeaderVisibility}" FontSize="11"
+                                       FontWeight="SemiBold" Foreground="{DynamicResource MutedBrush}" Margin="10,14,0,5"/>
+                            <Grid Visibility="{Binding RowVisibility}" Margin="{Binding Indent}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="18"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Glyph}" Visibility="{Binding GlyphVisibility}"
+                                           Style="{StaticResource Icon}" Foreground="{DynamicResource MutedBrush}"/>
+                                <TextBlock Text="{Binding Glyph}" Visibility="{Binding DotVisibility}"
+                                           Style="{StaticResource Icon}" Foreground="{Binding Dot}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Title}" Margin="10,0,0,0" TextTrimming="CharacterEllipsis"/>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="&#xE718;" Style="{StaticResource Icon}" FontSize="11" Margin="8,0,0,0"
+                                               Visibility="{Binding DefaultVisibility}" Foreground="{DynamicResource AccentBrush}"
+                                               ToolTip="Raf açılınca bu sekme gelir"/>
+                                    <TextBlock Text="{Binding CountText}" FontSize="12" Margin="8,0,0,0"
+                                               VerticalAlignment="Center" Foreground="{DynamicResource MutedBrush}"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+
+        <!-- İçerik -->
+        <Grid Grid.Row="1" Grid.Column="1">
+
+            <Grid x:Name="HomePanel">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Ayrıntı görünümünün sütun başlıkları. Kenar boşlukları satırların iç boşluğuyla hizalıdır. -->
+                    <Grid x:Name="DetailsHeader" Visibility="Collapsed" Margin="25,0,27,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="112"/>
+                            <ColumnDefinition Width="84"/>
+                            <ColumnDefinition Width="132"/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="NameHeader" Grid.Column="1" Style="{StaticResource ColumnHeader}" Tag="Name" Click="ColumnHeader_Click"/>
+                        <Button x:Name="TypeHeader" Grid.Column="2" Style="{StaticResource ColumnHeader}" Tag="Type" Click="ColumnHeader_Click"/>
+                        <Button x:Name="SizeHeader" Grid.Column="3" Style="{StaticResource ColumnHeader}" Tag="Size" Click="ColumnHeader_Click"
+                                HorizontalContentAlignment="Right" Padding="0" Margin="0,0,16,0"/>
+                        <Button x:Name="DateHeader" Grid.Column="4" Style="{StaticResource ColumnHeader}" Tag="Date" Click="ColumnHeader_Click"/>
+                    </Grid>
+
+                    <ListBox x:Name="ItemsList" Grid.Row="1" Style="{StaticResource PlainList}" SelectionMode="Extended"
+                             Padding="14,0,6,14"
+                             SelectionChanged="ItemsList_SelectionChanged"
+                             MouseDoubleClick="ItemsList_MouseDoubleClick" KeyDown="ItemsList_KeyDown"
+                             ContextMenuOpening="ItemsList_ContextMenuOpening"
+                             PreviewMouseLeftButtonDown="ItemsList_PreviewMouseLeftButtonDown"
+                             PreviewMouseLeftButtonUp="ItemsList_PreviewMouseLeftButtonUp"
+                             PreviewMouseRightButtonDown="ItemsList_PreviewMouseRightButtonDown"
+                             PreviewMouseMove="ItemsList_PreviewMouseMove">
+                        <ListBox.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="6,14,0,6">
+                                            <TextBlock Text="{Binding Name.Glyph}" Style="{StaticResource Icon}" FontSize="16"
+                                                       Foreground="{Binding Name.Dot}" Margin="0,0,9,0"
+                                                       Visibility="{Binding Name.DotVisibility}"/>
+                                            <TextBlock Text="{Binding Name.Title}" FontSize="14.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding Name.CountText}" Margin="9,0,0,0" VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource MutedBrush}"/>
+                                            <Button Content="Tümünü göster" Style="{StaticResource BtnLink}" Margin="8,0,0,0"
+                                                    Visibility="{Binding Name.MoreVisibility}" Tag="{Binding Name}" Click="ShowAll_Click"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListBox.GroupStyle>
+                    </ListBox>
+
+                    <TextBlock x:Name="EmptyNote" Grid.Row="1" Style="{StaticResource Sub}" Visibility="Collapsed"
+                               TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               MaxWidth="420" Margin="24" IsHitTestVisible="False"/>
+
+                    <!-- Raf boşken: nasıl kullanılır -->
+                    <ScrollViewer x:Name="Welcome" Grid.RowSpan="2" Visibility="Collapsed" VerticalScrollBarVisibility="Auto">
+                        <StackPanel MaxWidth="560" Margin="28,22,28,28" HorizontalAlignment="Left">
+                            <TextBlock Text="Rafın şimdilik boş" Style="{StaticResource H1}"/>
+                            <TextBlock Style="{StaticResource Sub}" Margin="0,8,0,20">
+                                Raf, kendi klasörüne giren dosyaları kategorilere ayırıp gösterir. Bir şey indirirken ya da kaydederken “Gelen” klasörünü seç; dosya kurallarına göre doğru kategoriye taşınır, kurala uymayanlar türüne göre yerleşir.
+                            </TextBlock>
+
+                            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                                <DockPanel>
+                                    <Button x:Name="PinButton" DockPanel.Dock="Right" Style="{StaticResource BtnPrimary}"
+                                            Content="Sabitle" Click="Pin_Click" VerticalAlignment="Center" Margin="14,0,0,0"/>
+                                    <StackPanel>
+                                        <TextBlock Text="1. “Gelen” klasörü kayıt pencerelerinde hep görünsün" Style="{StaticResource H2}" TextWrapping="Wrap"/>
+                                        <TextBlock x:Name="PinNote" Style="{StaticResource Sub}" Margin="0,4,0,0"
+                                                   Text="Hızlı Erişim'e sabitlenince her “Farklı kaydet” penceresinin sol tarafında durur."/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                                <DockPanel>
+                                    <Button x:Name="DownloadsButton" DockPanel.Dock="Right" Style="{StaticResource Btn}"
+                                            Content="İzlemeye al" Click="WatchDownloads_Click" VerticalAlignment="Center" Margin="14,0,0,0"/>
+                                    <StackPanel>
+                                        <TextBlock Text="2. İndirdiklerin de kendiliğinden düzenlensin" Style="{StaticResource H2}" TextWrapping="Wrap"/>
+                                        <TextBlock x:Name="DownloadsNote" Style="{StaticResource Sub}" Margin="0,4,0,0"
+                                                   Text="İndirilenler klasörüne yeni düşen dosyalar Raf'a alınır. Orada şu an duranlara dokunulmaz."/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Right" Style="{StaticResource Btn}" Content="Kategorilere git"
+                                            Click="GoCategories_Click" VerticalAlignment="Center" Margin="14,0,0,0"/>
+                                    <StackPanel>
+                                        <TextBlock Text="3. Kendi kategorilerini oluştur" Style="{StaticResource H2}" TextWrapping="Wrap"/>
+                                        <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,0"
+                                                   Text="Örneğin “Minecraft”: .jar dosyaları ve adında “mod” geçenler buraya gitsin."/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+
+                            <Border Style="{StaticResource Card}">
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Right" Style="{StaticResource Btn}" Content="İçeri al…"
+                                            Click="Import_Click" VerticalAlignment="Center" Margin="14,0,0,0"/>
+                                    <StackPanel>
+                                        <TextBlock Text="4. Var olan dosyalarını içeri al" Style="{StaticResource H2}" TextWrapping="Wrap"/>
+                                        <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,0"
+                                                   Text="Masaüstünde ve diğer klasörlerinde birikmiş olanlar kategorilerine yerleşsin. Önce neyin nereye gideceğini görürsün."/>
+                                    </StackPanel>
+                                </DockPanel>
+                            </Border>
+
+                            <TextBlock x:Name="HotkeyNote" Style="{StaticResource Sub}" Margin="2,18,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Son işlem ve geri al -->
+                    <Border x:Name="Snack" Grid.Row="2" Visibility="Collapsed" Margin="18,0,18,14" Padding="14,6,6,6"
+                            CornerRadius="10" Background="{DynamicResource Surface2Brush}"
+                            BorderBrush="{DynamicResource LineBrush}" BorderThickness="1">
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Style="{StaticResource BtnGhost}" Click="SnackClose_Click" ToolTip="Kapat">
+                                <TextBlock Text="&#xE8BB;" Style="{StaticResource Icon}" FontSize="10" Foreground="{DynamicResource MutedBrush}"/>
+                            </Button>
+                            <Button x:Name="SnackUndo" DockPanel.Dock="Right" Style="{StaticResource BtnLink}" Content="Geri al" Click="SnackUndo_Click"/>
+                            <TextBlock x:Name="SnackText" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                        </DockPanel>
+                    </Border>
+                </Grid>
+
+                <v:PreviewPane x:Name="Preview" Grid.Column="1" Visibility="Collapsed"/>
+            </Grid>
+
+            <v:CategoriesPage x:Name="CategoriesView" Visibility="Collapsed"/>
+            <v:HistoryPage x:Name="HistoryView" Visibility="Collapsed"/>
+            <v:SettingsPage x:Name="SettingsView" Visibility="Collapsed"/>
+        </Grid>
+    </Grid>
+</local:ChromeWindow>

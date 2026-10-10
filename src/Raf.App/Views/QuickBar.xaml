@@ -1,0 +1,78 @@
+<Window x:Class="Raf.App.Views.QuickBar"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Raf hızlı arama" Width="700" SizeToContent="Height"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent" ResizeMode="NoResize"
+        ShowInTaskbar="False" Topmost="True" WindowStartupLocation="Manual"
+        FontFamily="Segoe UI Variable Text, Segoe UI" FontSize="14" UseLayoutRounding="True"
+        Foreground="{DynamicResource TextBrush}"
+        Deactivated="Window_Deactivated" PreviewKeyDown="Window_PreviewKeyDown">
+    <!-- Kenardaki boşluk gölgeye yer açar; pencerenin kendisi saydamdır. -->
+    <Grid Margin="26,18,26,34">
+        <!-- Gölge ayrı bir katmanda: içeriğe efekt uygulanırsa yazılar bulanıklaşır. -->
+        <Border x:Name="Shadow" CornerRadius="14" Background="{DynamicResource SurfaceBrush}">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="30" ShadowDepth="8" Direction="270" Opacity="0.45"/>
+            </Border.Effect>
+        </Border>
+
+        <Border x:Name="Box" CornerRadius="14" Background="{DynamicResource SurfaceBrush}"
+                BorderBrush="{DynamicResource LineBrush}" BorderThickness="1">
+            <StackPanel>
+                <!-- Boyutlar iki kipte farklıdır; QuickBar.xaml.cs içindeki ApplyMode ayarlar. -->
+                <Grid x:Name="SearchRow" Height="58">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition x:Name="GlyphColumn" Width="54"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="SearchGlyph" Text="&#xE721;" Style="{StaticResource Icon}" FontSize="17" HorizontalAlignment="Center"
+                               Foreground="{DynamicResource MutedBrush}"/>
+                    <TextBox x:Name="SearchBox" Grid.Column="1" Style="{StaticResource InputBare}" FontSize="19"
+                             Tag="Ara: uygulama, dosya, klasör" TextChanged="SearchBox_TextChanged"/>
+                    <Button Grid.Column="2" Style="{StaticResource BtnGhost}" Margin="8,0,10,0" VerticalAlignment="Center"
+                            Click="OpenFull_Click" ToolTip="Tam pencereyi aç: kategoriler, kurallar, ayarlar">
+                        <TextBlock Text="&#xE8A7;" Style="{StaticResource Icon}" Foreground="{DynamicResource MutedBrush}"/>
+                    </Button>
+                </Grid>
+
+                <StackPanel x:Name="ResultsPanel" Visibility="Collapsed">
+                    <Border Height="1" Background="{DynamicResource LineBrush}"/>
+                    <TextBlock x:Name="Caption" FontSize="12.5" Margin="20,11,20,3" TextTrimming="CharacterEllipsis"
+                               Foreground="{DynamicResource MutedBrush}"/>
+                    <ListBox x:Name="Results" Style="{StaticResource PlainList}" MaxHeight="352" Padding="8,5,4,7"
+                             ItemContainerStyle="{StaticResource QuickItem}"
+                             PreviewMouseLeftButtonUp="Results_PreviewMouseLeftButtonUp">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Height="32">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{Binding Icon}" Width="26" Height="26" HorizontalAlignment="Left"
+                                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,4,0">
+                                        <TextBlock Text="{Binding CategoryGlyph}" Style="{StaticResource Icon}" FontSize="13"
+                                                   Margin="0,0,7,0" Foreground="{Binding CategoryDot}"/>
+                                        <TextBlock Text="{Binding CategoryName}" FontSize="12.5"
+                                                   Foreground="{DynamicResource MutedBrush}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+
+                <StackPanel x:Name="Footer">
+                    <Border Height="1" Background="{DynamicResource LineBrush}"/>
+                    <TextBlock x:Name="Hint" FontSize="12" Margin="20,8,20,10" TextTrimming="CharacterEllipsis"
+                               Foreground="{DynamicResource MutedBrush}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

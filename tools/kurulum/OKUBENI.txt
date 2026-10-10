@@ -1,0 +1,58 @@
+﻿RAF - KURULUM
+=============
+
+Raf, masaüstünü dağıtmadan dosya biriktirmeni sağlar: bir şey indirirken ya da kaydederken hep
+aynı klasörü ("Gelen") seçersin, Raf dosyayı kurallarına göre doğru kategoriye taşır. Alt+Space ile
+açılan arama çubuğundan uygulamalarını ve dosyalarını bulup açarsın.
+
+Gereken: Windows 10 ya da 11 (64 bit). Başka bir şey kurman gerekmez.
+
+
+NASIL KURULUR
+-------------
+1. "Raf-Kurulum" dosyasına çift tıkla.
+
+2. Mavi bir "Windows kişisel bilgisayarınızı korudu" penceresi çıkabilir. Bu, programın bir şirket
+   tarafından imzalanmamış olmasından kaynaklanır. "Ek bilgi" yazısına, ardından "Yine de çalıştır"
+   düğmesine tıkla.
+
+3. Kurulum penceresinde "İleri" ve "Kur" de. Yönetici izni istemez; "Windows açılınca Raf da
+   başlasın" kutusunu işaretli bırakman önerilir.
+
+4. "Raf'ı şimdi başlat" işaretliyken "Bitir" de. Raf açılır ve seni dört adımlık bir karşılama
+   ekranı karşılar.
+
+Raf'ın eski bir sürümü kuruluysa kaldırmana gerek yok: yeni kurulum dosyasını aynı şekilde
+çalıştır, üstüne kurulur. Dosyaların ve ayarların yerinde kalır.
+
+
+İLK KULLANIM
+------------
+- Raf yalnızca kendi klasörüne giren dosyaları gösterir; ilk açtığında boştur. Masaüstünde ve diğer
+  klasörlerinde birikmiş dosyaları getirmek için karşılama ekranında "İçeri al..." de (sonradan:
+  Ayarlar > "Var olan dosyaları içeri al"). Önce neyin nereye gideceğini görürsün: dosyalar
+  kategorilerine taşınır, klasörler yerinde kalıp bağlantı olarak eklenir. Hepsi geri alınabilir.
+- Karşılama ekranında "Sabitle" de: "Gelen" klasörü her "Farklı kaydet" penceresinin solunda görünür.
+- "İzlemeye al" dersen İndirilenler klasörüne yeni inen dosyalar da kendiliğinden yerleştirilir
+  (orada şu an duranlara dokunulmaz).
+- Alt+Space: her yerden arama çubuğunu açar. Uygulama, dosya ya da uzantı (örn. pdf) yaz, Enter'a bas.
+- Masaüstündeki küçük "Uygulama ara" kutucuğuna tıklayarak da arayabilirsin. Kutucuğu sürükleyip
+  istediğin yere koy; sağ tıkla gizleyebilirsin.
+- Saatin yanındaki Raf simgesi tam pencereyi açar: kategoriler, kurallar, geçmiş ve ayarlar burada.
+- Kendi kategorini açmak için: tam pencere > "Kategoriler ve kurallar" > "Yeni kategori".
+
+Raf hiçbir şeyi kendiliğinden silmez. Taşıdığı her şey "Geçmiş" sayfasında durur ve tek tıkla
+eski yerine geri alınır.
+
+
+NEREDE NE DURUR
+---------------
+Dosyaların     : C:\Users\<kullanıcı adın>\Raf        (her kategori gerçek bir klasördür)
+Ayarların      : %APPDATA%\Raf
+Program        : %LOCALAPPDATA%\Programs\Raf
+
+
+NASIL KALDIRILIR
+----------------
+Windows Ayarlar > Uygulamalar > Yüklü uygulamalar > Raf > Kaldır.
+Kaldırma yalnızca programı siler; Raf klasöründeki dosyalarına ve ayarlarına dokunmaz.

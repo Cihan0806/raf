@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+    <!-- Yalnızca sistem tepsisi simgesi (NotifyIcon) için. -->
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>Raf</AssemblyName>
+    <RootNamespace>Raf.App</RootNamespace>
+    <ApplicationIcon>Assets\raf.ico</ApplicationIcon>
+    <Version>1.0.2</Version>
+    <SatelliteResourceLanguages>tr</SatelliteResourceLanguages>
+    <!-- .NET 9 bilgisayardan kaldırılıp yerine daha yeni bir sürüm gelirse Raf onunla çalışmaya devam etsin. -->
+    <RollForward>LatestMajor</RollForward>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- WPF ile aynı adı taşıyan türler (Application, Button, Color...) karışmasın. -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+    <!-- WPF projelerinde varsayılan olarak gelmez (Shapes.Path ile karışmasın diye); burada Shapes içe alınmıyor. -->
+    <Using Include="System.IO" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\raf.ico" />
+    <Resource Include="Assets\raf.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Raf.Core\Raf.Core.csproj" />
+  </ItemGroup>
+
+</Project>

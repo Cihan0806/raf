@@ -1,0 +1,91 @@
+<local:ChromeWindow x:Class="Raf.App.Views.ImportDialog"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Raf.App"
+                    Title="İçeri al" Width="600" SizeToContent="Height" ResizeMode="NoResize"
+                    ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="24,24,24,20">
+        <TextBlock Text="Var olan dosyalarını içeri al" FontSize="17" FontWeight="SemiBold"/>
+        <TextBlock Style="{StaticResource Sub}" Margin="0,8,0,0"
+                   Text="Seçtiğin klasörlerde duran dosyalar kurallarına göre kategorilere taşınır. Hiçbir şey silinmez; hepsi sonradan eski yerine geri alınabilir."/>
+
+        <TextBlock Text="Nereden?" Style="{StaticResource Label}" Margin="0,18,0,4"/>
+        <StackPanel x:Name="Options">
+            <ItemsControl x:Name="SourceList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Style="{StaticResource Switch}" IsChecked="{Binding IsChecked}" Margin="0,5" Click="Option_Click">
+                            <StackPanel>
+                                <TextBlock Text="{Binding Title}"/>
+                                <TextBlock Text="{Binding Detail}" FontSize="12.5" Foreground="{DynamicResource MutedBrush}"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                        </CheckBox>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <Button Content="Başka klasör ekle…" Style="{StaticResource Btn}" HorizontalAlignment="Left"
+                    Margin="0,8,0,0" Click="AddFolder_Click"/>
+
+            <CheckBox x:Name="FoldersSwitch" Style="{StaticResource Switch}" IsChecked="True" Margin="0,18,0,0" Click="Option_Click">
+                <StackPanel>
+                    <TextBlock Text="Klasörleri de ekle"/>
+                    <TextBlock FontSize="12.5" Foreground="{DynamicResource MutedBrush}"
+                               Text="Klasörler yerinden oynamaz; Raf'ta “Klasörler” kategorisinde bağlantı olarak görünür."/>
+                </StackPanel>
+            </CheckBox>
+        </StackPanel>
+
+        <Border Height="1" Margin="0,18,0,0" Background="{DynamicResource LineBrush}"/>
+
+        <TextBlock x:Name="SummaryTitle" Style="{StaticResource H2}" Margin="0,14,0,0"/>
+        <TextBlock x:Name="SummaryText" Style="{StaticResource Sub}" Margin="0,4,0,0"/>
+
+        <Border x:Name="PreviewFrame" Height="190" Margin="0,10,0,0" CornerRadius="10" Padding="4"
+                Background="{DynamicResource SurfaceBrush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1">
+            <ListBox x:Name="PreviewList" Background="Transparent" BorderThickness="0" Focusable="False"
+                     Foreground="{DynamicResource TextBrush}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     VirtualizingPanel.ScrollUnit="Pixel">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Focusable" Value="False"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border Padding="10,4" Background="Transparent">
+                                        <ContentPresenter/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel ToolTip="{Binding Path}">
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding Target}" FontSize="12.5" Margin="14,0,0,0"
+                                       VerticalAlignment="Center" Foreground="{DynamicResource MutedBrush}"/>
+                            <TextBlock Text="{Binding Glyph}" Style="{StaticResource Icon}" FontSize="13"
+                                       Foreground="{DynamicResource MutedBrush}"/>
+                            <TextBlock Text="{Binding Name}" Margin="10,0,0,0" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" Opacity="{Binding Opacity}"/>
+                        </DockPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+
+        <DockPanel Margin="0,20,0,0">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <Button x:Name="CancelButton" Content="Vazgeç" Style="{StaticResource Btn}" IsCancel="True" MinWidth="84"/>
+                <Button x:Name="ImportButton" Content="İçeri al" Style="{StaticResource BtnPrimary}" IsDefault="True" MinWidth="110"
+                        Margin="8,0,0,0" Click="Import_Click"/>
+            </StackPanel>
+            <TextBlock x:Name="StatusText" Style="{StaticResource Sub}" VerticalAlignment="Center" Margin="0,0,14,0"/>
+        </DockPanel>
+    </StackPanel>
+    </ScrollViewer>
+</local:ChromeWindow>

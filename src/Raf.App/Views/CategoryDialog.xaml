@@ -1,0 +1,61 @@
+<local:ChromeWindow x:Class="Raf.App.Views.CategoryDialog"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Raf.App"
+                    Title="Kategori" Width="520" SizeToContent="Height" ResizeMode="NoResize"
+                    ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="24,24,24,20">
+        <TextBlock x:Name="Heading" FontSize="17" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+
+        <TextBlock Text="Ad" Style="{StaticResource Label}" Margin="0,18,0,6"/>
+        <TextBox x:Name="NameBox" Style="{StaticResource Input}" Tag="Örneğin: Minecraft" MaxLength="60"/>
+
+        <StackPanel x:Name="ParentPanel">
+            <TextBlock Text="Üst kategori" Style="{StaticResource Label}"/>
+            <WrapPanel x:Name="ParentChips"/>
+        </StackPanel>
+
+        <TextBlock Text="Simge" Style="{StaticResource Label}" Margin="0,10,0,6"/>
+        <WrapPanel x:Name="IconSwatches"/>
+
+        <TextBlock Text="Renk" Style="{StaticResource Label}" Margin="0,10,0,6"/>
+        <WrapPanel x:Name="Swatches"/>
+
+        <StackPanel x:Name="RulesPanel">
+            <Border Height="1" Margin="0,20,0,0" Background="{DynamicResource LineBrush}"/>
+            <TextBlock Text="Buraya ne gelsin?" Style="{StaticResource H2}" Margin="0,16,0,3"/>
+            <TextBlock Style="{StaticResource Sub}"
+                       Text="Boş bıraktığın ölçüt yok sayılır. Hepsini boş bırakırsan bu kategoriye yalnızca elle taşıdıkların girer."/>
+
+            <TextBlock Text="Dosya türü (uzantı)" Style="{StaticResource Label}"/>
+            <TextBox x:Name="ExtensionsBox" Style="{StaticResource Input}" Tag=".jar  .zip  .schem"/>
+
+            <TextBlock Text="Adında şunlardan biri geçiyorsa" Style="{StaticResource Label}"/>
+            <TextBox x:Name="WordsBox" Style="{StaticResource Input}" Tag="mod, minecraft, plugin   (virgülle ayır)"/>
+
+            <TextBlock Text="Şu sitelerden indirildiyse" Style="{StaticResource Label}"/>
+            <TextBox x:Name="SitesBox" Style="{StaticResource Input}" Tag="modrinth.com, curseforge.com"/>
+
+            <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
+                <RadioButton x:Name="AnyRadio" GroupName="Match" Style="{StaticResource Radio}" IsChecked="True"
+                             Content="Biri uysa yeter"/>
+                <RadioButton x:Name="AllRadio" GroupName="Match" Style="{StaticResource Radio}" Margin="24,0,0,0"
+                             Content="Doldurduklarımın hepsi uymalı"/>
+            </StackPanel>
+        </StackPanel>
+
+        <TextBlock x:Name="FallbackNote" Style="{StaticResource Sub}" Visibility="Collapsed" Margin="0,18,0,0"
+                   Text="Bu kategorinin kuralı olmaz: başka hiçbir kategoriye uymayan her şey buraya düşer."/>
+
+        <TextBlock x:Name="ErrorText" Visibility="Collapsed" TextWrapping="Wrap" Margin="0,16,0,0"
+                   Foreground="{DynamicResource DangerBrush}"/>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
+            <Button Content="Vazgeç" Style="{StaticResource Btn}" IsCancel="True" MinWidth="84"/>
+            <Button Content="Kaydet" Style="{StaticResource BtnPrimary}" IsDefault="True" MinWidth="84"
+                    Margin="8,0,0,0" Click="Save_Click"/>
+        </StackPanel>
+    </StackPanel>
+    </ScrollViewer>
+</local:ChromeWindow>

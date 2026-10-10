@@ -1,0 +1,102 @@
+<UserControl x:Class="Raf.App.Views.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="26,4,26,24" MaxWidth="700" HorizontalAlignment="Left">
+            <TextBlock Text="Ayarlar" Style="{StaticResource H1}" Margin="0,0,0,16"/>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="Kaydetme klasörü (Gelen)" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,10"
+                               Text="Buraya kaydettiğin ya da indirdiğin her şey birkaç saniye içinde kategorisine taşınır."/>
+                    <TextBox x:Name="InboxPath" Style="{StaticResource Input}" IsReadOnly="True"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                        <Button Content="Klasörü aç" Style="{StaticResource Btn}" Click="OpenInbox_Click"/>
+                        <Button x:Name="PinButton" Content="Hızlı Erişim'e sabitle" Style="{StaticResource Btn}"
+                                Margin="8,0,0,0" Click="Pin_Click"
+                                ToolTip="Klasör, her “Farklı kaydet” penceresinin sol tarafında görünür."/>
+                        <TextBlock x:Name="PinStatus" Style="{StaticResource Sub}" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="Ayrıca izlenen klasörler" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,8"
+                               Text="Bu klasörlere yeni düşen dosyalar da Raf'a alınır. İçlerinde zaten duranlara dokunulmaz."/>
+                    <ItemsControl x:Name="WatchList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="0,2">
+                                    <Button DockPanel.Dock="Right" Style="{StaticResource BtnGhost}" Tag="{Binding}"
+                                            Click="Unwatch_Click" ToolTip="İzlemeyi bırak">
+                                        <TextBlock Text="&#xE8BB;" Style="{StaticResource Icon}" FontSize="10"
+                                                   Foreground="{DynamicResource MutedBrush}"/>
+                                    </Button>
+                                    <TextBlock Text="&#xE8B7;" Style="{StaticResource Icon}" Foreground="{DynamicResource MutedBrush}"/>
+                                    <TextBlock Text="{Binding}" Margin="10,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <Button x:Name="AddDownloadsButton" Content="İndirilenler'i ekle" Style="{StaticResource Btn}"
+                                Margin="0,0,8,0" Click="AddDownloads_Click"/>
+                        <Button Content="Klasör seç…" Style="{StaticResource Btn}" Click="AddFolder_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="Var olan dosyaları içeri al" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,10"
+                               Text="Masaüstünde ya da başka bir klasörde birikmiş dosyaları kurallarına göre kategorilerine yerleştirir. Önce neyin nereye gideceğini görürsün; hepsi geri alınabilir."/>
+                    <Button Content="İçeri al…" Style="{StaticResource Btn}" HorizontalAlignment="Left" Click="Import_Click"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                <StackPanel>
+                    <TextBlock Text="Kısayol tuşu" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,10"
+                               Text="Hızlı arama çubuğunu her yerden açıp kapatır. Değiştirmek için kutuya tıkla ve yeni tuş bileşimine bas."/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBox x:Name="HotkeyBox" Style="{StaticResource Input}" Width="190" IsReadOnly="True"
+                                 PreviewKeyDown="HotkeyBox_PreviewKeyDown"
+                                 GotKeyboardFocus="HotkeyBox_GotFocus" LostKeyboardFocus="HotkeyBox_LostFocus"/>
+                        <TextBlock x:Name="HotkeyStatus" Style="{StaticResource Sub}" Margin="12,0,0,0" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <CheckBox x:Name="WidgetSwitch" Style="{StaticResource Switch}" Margin="0,16,0,0" Click="Widget_Click"
+                              Content="Masaüstünde “Uygulama ara” kutucuğunu göster"/>
+                    <CheckBox x:Name="SearchAppsSwitch" Style="{StaticResource Switch}" Margin="0,14,0,0" Click="SearchApps_Click"
+                              Content="Hızlı arama uygulamaları, sistem klasörlerini ve masaüstündekileri de göstersin"/>
+                    <CheckBox x:Name="FullscreenSwitch" Style="{StaticResource Switch}" Margin="0,14,0,0" Click="Fullscreen_Click"
+                              Content="Tam ekran oyun ya da video öndeyken kısayol devre dışı kalsın"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                <StackPanel>
+                    <CheckBox x:Name="AutostartSwitch" Style="{StaticResource Switch}" Click="Autostart_Click"
+                              Content="Windows açılınca Raf da başlasın (arka planda, pencere açmadan)"/>
+                    <CheckBox x:Name="NotifySwitch" Style="{StaticResource Switch}" Margin="0,14,0,0" Click="Notify_Click"
+                              Content="Bir dosya düzenlenince bildirim göster"/>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Text="Raf klasörü" Style="{StaticResource H2}"/>
+                    <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,10"
+                               Text="Her kategori burada gerçek bir klasördür; aynı düzeni Dosya Gezgini'nden de görürsün."/>
+                    <TextBox x:Name="RootPath" Style="{StaticResource Input}" IsReadOnly="True"/>
+                    <Button Content="Klasörü aç" Style="{StaticResource Btn}" HorizontalAlignment="Left"
+                            Margin="0,10,0,0" Click="OpenRoot_Click"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
