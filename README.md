@@ -135,6 +135,8 @@ Sonrasında Alt+Space arama çubuğunu, saatin yanındaki Raf simgesi tam pencer
   Yeniden adlandırma da geçmişe yazılır ve geri alınabilir.
 - **Görünüm:** kutucuklar ya da ayrıntı listesi; ada, eklenme tarihine, boyuta ya da türe göre sıralama;
   seçili öğeyi büyük gösteren önizleme bölmesi (metin dosyalarının içeriğinin başıyla birlikte).
+- **Disk çubuğu:** üst şeritte, arama kutusuyla görünüm düğmelerinin arasında, Raf klasörünün durduğu
+  diskin doluluğu ("148 GB boş · 328 GB dolu"). Boş yer onda birin altına inince kırmızıya döner.
 - **Küçük resimler:** resim ve videolarda Dosya Gezgini'nin gösterdiği küçük resmin aynısı kullanılır
   (Windows'un küçük resim üretebildiği her biçim); diğer dosyalarda türün simgesi görünür.
 

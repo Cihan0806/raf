@@ -12,7 +12,7 @@
     <AssemblyName>Raf</AssemblyName>
     <RootNamespace>Raf.App</RootNamespace>
     <ApplicationIcon>Assets\raf.ico</ApplicationIcon>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <SatelliteResourceLanguages>tr</SatelliteResourceLanguages>
     <!-- .NET 9 bilgisayardan kaldırılıp yerine daha yeni bir sürüm gelirse Raf onunla çalışmaya devam etsin. -->
     <RollForward>LatestMajor</RollForward>

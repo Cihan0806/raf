@@ -83,8 +83,8 @@
 
         <Grid Grid.Column="1" Margin="18,0,8,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100*" MaxWidth="520"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100*" MaxWidth="440"/>
+                <ColumnDefinition Width="*" MinWidth="216"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Grid VerticalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="True">
@@ -93,6 +93,22 @@
                          TextChanged="SearchBox_TextChanged" PreviewKeyDown="SearchBox_PreviewKeyDown"/>
                 <TextBlock Text="&#xE721;" Style="{StaticResource Icon}" Foreground="{DynamicResource MutedBrush}"
                            Margin="13,0,0,0" HorizontalAlignment="Left" IsHitTestVisible="False"/>
+            </Grid>
+            <!-- Raf klasörünün durduğu diskin doluluğu. Fareyle etkileşmez; pencere buradan da tutulup sürüklenir. -->
+            <Grid x:Name="DiskHost" Grid.Column="1">
+                <Border x:Name="DiskBar" Height="26" Margin="14,0" MaxWidth="300" CornerRadius="8" VerticalAlignment="Center"
+                        Background="{DynamicResource Surface2Brush}" BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+                        IsHitTestVisible="False" Visibility="Collapsed">
+                    <Grid x:Name="DiskInner">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition x:Name="DiskUsedColumn" Width="0*"/>
+                            <ColumnDefinition x:Name="DiskFreeColumn" Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border x:Name="DiskFill" Opacity="0.4"/>
+                        <TextBlock x:Name="DiskText" Grid.ColumnSpan="2" FontSize="12"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
             </Grid>
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
                         WindowChrome.IsHitTestVisibleInChrome="True">

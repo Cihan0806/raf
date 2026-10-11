@@ -210,6 +210,10 @@ public partial class App : Application
 
         await Task.Delay(1800);
         await Shot("1-tumu");
+        double width = main.Width;
+        main.Width = main.MinWidth;
+        await Shot("27-dar-pencere");
+        main.Width = width;
         main.DebugGo("first-category");
         await Shot("2-kategori");
         main.DebugGo("search:mod");

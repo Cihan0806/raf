@@ -56,6 +56,9 @@ internal static class Ui
         return unit == 0 ? $"{bytes} B" : value.ToString(value < 10 ? "0.#" : "0", Turkish) + " " + units[unit];
     }
 
+    /// <summary>Disk boyutu: "38,5 GB", "148 GB", "1,82 TB".</summary>
+    public static string DiskSizeText(long bytes) => Raf.Core.DiskUsage.SizeText(bytes, Turkish);
+
     public static string WhenText(DateTime time)
     {
         var today = DateTime.Today;

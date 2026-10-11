@@ -71,6 +71,7 @@ public partial class MainWindow : ChromeWindow
 
         ApplyViewMode();
         WatchRoot();
+        InitDiskBar();
     }
 
     // ===== Göster / gizle =====
