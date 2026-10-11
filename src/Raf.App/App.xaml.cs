@@ -61,6 +61,7 @@ public partial class App : Application
                 Config = cfg,
                 Sorter = sorter,
                 Watcher = new InboxWatcher(cfg, sorter),
+                Catcher = new DownloadCatcher(cfg),
                 Hotkey = new HotkeyManager { PauseInFullscreen = cfg.PauseHotkeyInFullscreen },
                 Launchables = new Launchables(cfg),
             };
@@ -85,6 +86,13 @@ public partial class App : Application
         S.Watcher.Failed += (path, reason) =>
             Dispatcher.InvokeAsync(() => S.Tray?.Notify("Raf bir öğeyi taşıyamadı", $"{Path.GetFileName(path)}: {reason}"));
         S.Watcher.Start();
+
+        S.Catcher.Caught += S.OnCaught;
+        S.Catcher.Moved += S.OnCaughtMoved;
+        S.Catcher.Gone += S.OnCaughtGone;
+        S.Catcher.Failed += (path, reason) =>
+            Dispatcher.InvokeAsync(() => S.Tray?.Notify("Raf bir öğeyi taşıyamadı", $"{Path.GetFileName(path)}: {reason}"));
+        S.ApplyCatcher();
 
         if (!S.Hotkey.Register(S.Config.Hotkey))
         {
@@ -138,6 +146,7 @@ public partial class App : Application
         if (S is not null)
         {
             S.Watcher.Dispose();
+            S.Catcher.Dispose();
             S.Hotkey.Dispose();
             S.Tray?.Dispose();
         }

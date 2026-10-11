@@ -165,22 +165,38 @@ public static class CategoryService
     }
 
     /// <summary>Bir yolu yerinden oynatmadan bir kategoriye bağlar. Zaten bağlıysa kategorisini günceller.</summary>
-    public static void AddLink(RafConfig cfg, ConfigStore store, string path, Category category)
+    /// <param name="auto">Bağlantıyı kullanıcı değil Raf ekliyorsa true (bkz. <see cref="LinkItem.Auto"/>).</param>
+    public static void AddLink(RafConfig cfg, ConfigStore store, string path, Category category, bool auto = false)
     {
         lock (cfg)
         {
             var existing = cfg.Links.FirstOrDefault(l => RafLayout.IsSame(l.Path, path));
             if (existing is not null) existing.CategoryId = category.Id;
-            else cfg.Links.Add(new LinkItem { Path = RafLayout.Normalize(path), CategoryId = category.Id, Added = DateTime.Now });
+            else cfg.Links.Add(new LinkItem { Path = RafLayout.Normalize(path), CategoryId = category.Id, Added = DateTime.Now, Auto = auto });
             store.Save(cfg);
         }
     }
 
-    public static void RemoveLink(RafConfig cfg, ConfigStore store, string path)
+    /// <summary>Bağlı bir öğenin yolu değiştiyse bağlantıyı yeni yola çevirir. Bağlantı yoksa bir şey yapmaz.</summary>
+    public static bool RetargetLink(RafConfig cfg, ConfigStore store, string from, string to)
     {
         lock (cfg)
         {
-            if (cfg.Links.RemoveAll(l => RafLayout.IsSame(l.Path, path)) > 0) store.Save(cfg);
+            var link = cfg.Links.FirstOrDefault(l => RafLayout.IsSame(l.Path, from));
+            if (link is null) return false;
+            link.Path = RafLayout.Normalize(to);
+            store.Save(cfg);
+            return true;
+        }
+    }
+
+    public static bool RemoveLink(RafConfig cfg, ConfigStore store, string path)
+    {
+        lock (cfg)
+        {
+            if (cfg.Links.RemoveAll(l => RafLayout.IsSame(l.Path, path)) == 0) return false;
+            store.Save(cfg);
+            return true;
         }
     }
 }

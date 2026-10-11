@@ -29,6 +29,11 @@ public partial class SettingsPage : UserControl
         SearchAppsSwitch.IsChecked = S.Config.SearchApps;
         WidgetSwitch.IsChecked = S.Config.ShowWidget;
         AutostartSwitch.IsChecked = Shell.Autostart;
+        CatchSwitch.IsChecked = S.Config.CatchDownloads;
+        CatchLinkRadio.IsChecked = !S.Config.CatchMove;
+        CatchMoveRadio.IsChecked = S.Config.CatchMove;
+        CatchModePanel.IsEnabled = S.Config.CatchDownloads;
+        CatchModePanel.Opacity = S.Config.CatchDownloads ? 1 : 0.5;
 
         List<string> folders;
         lock (S.Config) folders = S.Config.WatchFolders.ToList();
@@ -73,6 +78,22 @@ public partial class SettingsPage : UserControl
     private void AddDownloads_Click(object sender, RoutedEventArgs e) => AddWatch(Shell.Downloads());
 
     private void Import_Click(object sender, RoutedEventArgs e) => (Owner as MainWindow)?.ImportExisting();
+
+    private void Catch_Click(object sender, RoutedEventArgs e)
+    {
+        S.Config.CatchDownloads = CatchSwitch.IsChecked == true;
+        S.Save();
+        S.ApplyCatcher();
+        CatchModePanel.IsEnabled = S.Config.CatchDownloads;
+        CatchModePanel.Opacity = S.Config.CatchDownloads ? 1 : 0.5;
+    }
+
+    private void CatchMode_Click(object sender, RoutedEventArgs e)
+    {
+        S.Config.CatchMove = CatchMoveRadio.IsChecked == true;
+        S.Save();
+        S.ApplyCatcher();
+    }
 
     private void AddFolder_Click(object sender, RoutedEventArgs e)
     {

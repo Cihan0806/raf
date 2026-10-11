@@ -51,6 +51,24 @@
 
             <Border Style="{StaticResource Card}" Margin="0,0,0,10">
                 <StackPanel>
+                    <CheckBox x:Name="CatchSwitch" Style="{StaticResource Switch}" Click="Catch_Click">
+                        <StackPanel>
+                            <TextBlock Text="İndirdiklerimi nereye kaydedersem kaydedeyim yakala" FontWeight="SemiBold" FontSize="14.5"/>
+                            <TextBlock FontSize="12.5" Foreground="{DynamicResource MutedBrush}" TextWrapping="Wrap" Margin="0,3,0,0"
+                                       Text="İnternetten indirilen dosyalar, Gelen'e ya da izlenen bir klasöre değil de başka bir yere kaydedilse bile fark edilir. Programların kendi oluşturduğu dosyalara dokunulmaz."/>
+                        </StackPanel>
+                    </CheckBox>
+                    <StackPanel x:Name="CatchModePanel" Margin="50,14,0,0">
+                        <RadioButton x:Name="CatchLinkRadio" GroupName="CatchMode" Style="{StaticResource Radio}" Click="CatchMode_Click"
+                                     Content="Dosya kaydettiğim yerde kalsın, Raf'ta kategorisinde görünsün"/>
+                        <RadioButton x:Name="CatchMoveRadio" GroupName="CatchMode" Style="{StaticResource Radio}" Click="CatchMode_Click"
+                                     Margin="0,10,0,0" Content="Gelen'e inmiş gibi kategorisine taşınsın"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Style="{StaticResource Card}" Margin="0,0,0,10">
+                <StackPanel>
                     <TextBlock Text="Var olan dosyaları içeri al" Style="{StaticResource H2}"/>
                     <TextBlock Style="{StaticResource Sub}" Margin="0,4,0,10"
                                Text="Masaüstünde ya da başka bir klasörde birikmiş dosyaları kurallarına göre kategorilerine yerleştirir. Önce neyin nereye gideceğini görürsün; hepsi geri alınabilir."/>

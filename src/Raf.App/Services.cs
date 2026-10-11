@@ -9,6 +9,7 @@ public sealed class Services
     public required RafConfig Config { get; init; }
     public required Sorter Sorter { get; init; }
     public required InboxWatcher Watcher { get; init; }
+    public required DownloadCatcher Catcher { get; init; }
     public required HotkeyManager Hotkey { get; init; }
     public required Launchables Launchables { get; init; }
     public TrayIcon? Tray { get; set; }
@@ -18,6 +19,61 @@ public sealed class Services
     public event Action? Changed;
 
     public void NotifyChanged() => Changed?.Invoke();
+
+    /// <summary>
+    /// Başka bir klasöre inen dosya yerinde bırakılıp bir kategoriye bağlandı: (yol, kategori).
+    /// Arka plan iş parçacığından gelir.
+    /// </summary>
+    public event Action<string, Category>? Linked;
+
+    /// <summary>İndirme yakalamayı ayarlara göre başlatır, yeniden başlatır ya da durdurur.</summary>
+    public void ApplyCatcher()
+    {
+        bool on, move;
+        lock (Config)
+        {
+            on = Config.CatchDownloads;
+            move = Config.CatchMove;
+        }
+        Catcher.RequireExclusive = move;
+        if (on) Catcher.Start();
+        else Catcher.Stop();
+    }
+
+    /// <summary>Gelen'in ve izlenen klasörlerin dışına inen bir dosya yakalandı (arka plan iş parçacığında çağrılır).</summary>
+    public void OnCaught(string path)
+    {
+        bool move;
+        lock (Config)
+        {
+            move = Config.CatchMove;
+            // Kullanıcının kendi eklediği bağlantıya ve seçtiği kategoriye dokunulmaz.
+            if (!move && Config.Links.Any(l => RafLayout.IsSame(l.Path, path))) return;
+        }
+
+        if (move)
+        {
+            Sorter.Sort(path, auto: true);
+            return;
+        }
+
+        var category = Sorter.Classify(path);
+        CategoryService.AddLink(Config, Store, path, category, auto: true);
+        Linked?.Invoke(path, category);
+        NotifyChanged();
+    }
+
+    /// <summary>Yakalanmış bir dosyanın adı ya da yeri değişti; bağlantısı onu izler.</summary>
+    public void OnCaughtMoved(string from, string to)
+    {
+        if (CategoryService.RetargetLink(Config, Store, from, to)) NotifyChanged();
+    }
+
+    /// <summary>Yakalanmış bir dosya silindi; bağlantısı da kalkar.</summary>
+    public void OnCaughtGone(string path)
+    {
+        if (CategoryService.RemoveLink(Config, Store, path)) NotifyChanged();
+    }
 
     public void Save()
     {
@@ -59,6 +115,7 @@ public sealed class Services
             Store.Save(Config);
         }
         Watcher.Start();
+        ApplyCatcher();
         NotifyChanged();
         return null;
     }
@@ -71,6 +128,7 @@ public sealed class Services
             Store.Save(Config);
         }
         Watcher.Start();
+        ApplyCatcher();
         NotifyChanged();
     }
 }

@@ -66,6 +66,8 @@ public sealed class ConfigStore
             category.Icon = Defaults.IconFor(category.Name);
 
         cfg.Held.RemoveAll(h => !RafLayout.Exists(h));
+        // Kendiliğinden eklenmiş bağlantı, dosyası Raf kapalıyken silindiyse listede kalmasın.
+        cfg.Links.RemoveAll(l => l.Auto && !RafLayout.Exists(l.Path));
 
         if (isNew) Save(cfg);
         return cfg;

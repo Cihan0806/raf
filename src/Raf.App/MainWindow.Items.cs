@@ -450,6 +450,28 @@ public partial class MainWindow
         }
     }
 
+    /// <summary>Başka bir klasöre inen dosya yerinde bırakılıp bir kategoride gösterilmeye başlandı.</summary>
+    private void OnLinked(string path, Category category)
+    {
+        var name = Path.GetFileName(path);
+        string categoryName;
+        lock (_s.Config) categoryName = _s.Config.PathName(category);
+
+        ShowSnackAction($"“{name}” kaydedildiği yerde duruyor; {categoryName} kategorisinde görünüyor.", () =>
+        {
+            CategoryService.RemoveLink(_s.Config, _s.Store, path);
+            _s.Catcher.Forget(path);
+            ScheduleReload();
+        }, sticky: false);
+
+        if (_s.Config.Notify && !IsActive)
+        {
+            _notifyBatch.Add(new MoveRecord { To = path, CategoryName = categoryName, Auto = true });
+            _notifyTimer.Stop();
+            _notifyTimer.Start();
+        }
+    }
+
     private void FlushNotifications()
     {
         _notifyTimer.Stop();
@@ -479,13 +501,14 @@ public partial class MainWindow
         _snackTimer.Start();
     }
 
-    /// <summary>Tek bir taşıma kaydına bağlı olmayan, geri alınabilir bir iş için. Kapatılana ya da yenisi gelene kadar durur.</summary>
-    private void ShowSnackAction(string text, Action undo)
+    /// <summary>Tek bir taşıma kaydına bağlı olmayan, geri alınabilir bir iş için.</summary>
+    /// <param name="sticky">true ise bildirim kendiliğinden kaybolmaz; kapatılana ya da yenisi gelene kadar durur.</param>
+    private void ShowSnackAction(string text, Action undo, bool sticky = true)
     {
         ShowSnack(text, null);
         _snackAction = undo;
         SnackUndo.Visibility = Visibility.Visible;
-        _snackTimer.Stop();
+        if (sticky) _snackTimer.Stop();
     }
 
     private void HideSnack()

@@ -193,16 +193,7 @@ public sealed class Sorter
     /// Yerinden oynatılmadan Raf'ta gösterilen bir öğenin (bağlantının) yolu değiştiyse bağlantıyı
     /// yeni yola çevirir; yoksa öğe Raf'tan kaybolurdu.
     /// </summary>
-    private void RetargetLink(string from, string to)
-    {
-        lock (_cfg)
-        {
-            var link = _cfg.Links.FirstOrDefault(l => RafLayout.IsSame(l.Path, from));
-            if (link is null) return;
-            link.Path = to;
-            _store.Save(_cfg);
-        }
-    }
+    private void RetargetLink(string from, string to) => CategoryService.RetargetLink(_cfg, _store, from, to);
 
     private void Remember(MoveRecord record)
     {

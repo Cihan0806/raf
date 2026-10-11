@@ -204,7 +204,7 @@ public sealed class InboxWatcher : IDisposable
             }
 
             // Firefox "ad.zip" adında boş bir yer tutucu açıp asıl veriyi "ad.zip.part" içine yazar.
-            if (TempExtensions.Any(t => File.Exists(path + t))) return Verdict.Wait;
+            if (HasTempSibling(path)) return Verdict.Wait;
 
             long size = new FileInfo(path).Length;
             if (size != pending.Size)
@@ -224,6 +224,9 @@ public sealed class InboxWatcher : IDisposable
             return Verdict.Wait;
         }
     }
+
+    /// <summary>Dosyanın yanında, aynı adla başlayan yarım bir indirme (ör. "ad.zip.part") duruyor mu?</summary>
+    public static bool HasTempSibling(string path) => TempExtensions.Any(t => File.Exists(path + t));
 
     public static bool IsTemp(string name) =>
         TempExtensions.Any(t => name.EndsWith(t, StringComparison.OrdinalIgnoreCase))

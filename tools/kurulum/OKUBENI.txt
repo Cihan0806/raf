@@ -35,6 +35,8 @@ Raf'ın eski bir sürümü kuruluysa kaldırmana gerek yok: yeni kurulum dosyas�
 - Karşılama ekranında "Sabitle" de: "Gelen" klasörü her "Farklı kaydet" penceresinin solunda görünür.
 - "İzlemeye al" dersen İndirilenler klasörüne yeni inen dosyalar da kendiliğinden yerleştirilir
   (orada şu an duranlara dokunulmaz).
+- Tarayıcıyla indirdiğin bir dosyayı başka bir klasöre kaydetsen de Raf fark eder: dosya kaydettiğin
+  yerde kalır, Raf'ta kategorisinde görünür. Taşınmasını istersen ya da kapatmak için: Ayarlar.
 - Alt+Space: her yerden arama çubuğunu açar. Uygulama, dosya ya da uzantı (örn. pdf) yaz, Enter'a bas.
 - Masaüstündeki küçük "Uygulama ara" kutucuğuna tıklayarak da arayabilirsin. Kutucuğu sürükleyip
   istediğin yere koy; sağ tıkla gizleyebilirsin.

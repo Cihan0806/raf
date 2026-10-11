@@ -61,6 +61,7 @@ public partial class MainWindow : ChromeWindow
         _notifyTimer.Tick += (_, _) => FlushNotifications();
 
         _s.Sorter.Moved += record => Dispatcher.InvokeAsync(() => OnMoved(record));
+        _s.Linked += (path, category) => Dispatcher.InvokeAsync(() => OnLinked(path, category));
         _s.Changed += ScheduleReload;
         ItemsList.ContextMenu = new ContextMenu();
         Nav.ContextMenu = new ContextMenu();

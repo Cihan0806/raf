@@ -15,6 +15,8 @@ launcher.*
 
 - **Tek kaydetme klasörü:** "Gelen"e düşen her dosya kurallarına göre kategorisine taşınır; kurala
   uymayan türüne göre yerleşir. İstersen İndirilenler gibi klasörler de izlenir.
+- **Nereye indirirsen indir:** tarayıcıyla başka bir klasöre kaydettiğin dosya da fark edilir ve Raf'ta
+  kategorisinde görünür.
 - **Senin kuralların:** dosya türü, adında geçen kelime, indirildiği site. Kategoriler ve bir seviye
   alt kategori ("Minecraft › Modlar"), her birinin simgesi ve rengiyle.
 - **Hızlı arama (Alt+Space):** Raf'taki dosyalar, kurulu uygulamalar ve sistem yerleri tek çubukta.
@@ -98,6 +100,12 @@ Sonrasında Alt+Space arama çubuğunu, saatin yanındaki Raf simgesi tam pencer
   olmazsa "Diğer"e düşer.
 - **Ek izlenen klasörler:** örneğin İndirilenler. Buralarda yalnızca izleme başladıktan sonra gelen
   dosyalara dokunulur.
+- **Başka yere inenler:** internetten indirilen bir dosya Gelen'e ya da izlenen bir klasöre değil de başka
+  bir yere kaydedilse bile fark edilir. Dosya, Windows'un indirilenlere koyduğu "internetten geldi"
+  işaretinden tanınır; programların kendi oluşturduğu dosyalara dokunulmaz. Varsayılan olarak dosya
+  kaydedildiği yerde kalır ve Raf'ta kategorisinde bağlantı olarak görünür (adı değişirse bağlantı onu
+  izler, silinirse kalkar); Ayarlar'dan "kategorisine taşınsın" seçilebilir ya da özellik kapatılabilir.
+  Kullanıcı klasörleri ve diğer sabit sürücüler izlenir; Windows'un, programların ve gizli klasörlerin içi izlenmez.
 - **Bağlantılar:** yeri değişmemesi gereken öğeler (proje klasörleri gibi) taşınmadan bir kategoride gösterilir.
 - **Var olanları içeri alma:** karşılama ekranındaki ya da Ayarlar'daki "İçeri al…" ile seçilen klasörlerin
   (Masaüstü, İndirilenler, Belgeler…) en üst düzeyindeki dosyalar kurallara göre kategorilere taşınır,
@@ -138,6 +146,9 @@ Ayarlar `%APPDATA%\Raf\config.json`, taşıma geçmişi `%APPDATA%\Raf\gecmis.js
 - Kurulum programı imzasızdır (SmartScreen uyarısı).
 - Klasör öğeleri Raf'ın içinde gezilmez; Dosya Gezgini'nde açılır.
 - PDF'lerin içi aranmaz.
+- Başka yere inen dosyalar yalnızca "internetten geldi" işareti taşıyorsa fark edilir. Bu işareti koymayan
+  programlarla (bazı sohbet uygulamaları, komut satırı araçları) inenler için dosyayı Gelen'e ya da
+  izlenen bir klasöre kaydetmek gerekir.
 
 ## Geliştirme
 
@@ -160,7 +171,8 @@ Debug derlemesinde `--shot <klasör>` her ekranın görüntüsünü o klasöre k
 ### Proje yapısı
 
 - `src/Raf.Core`: arayüzden bağımsız çekirdek. Kural motoru (`RuleEngine`), klasör izleme
-  (`InboxWatcher`), taşıma, yeniden adlandırma ve geri alma (`Sorter`), kategori işlemleri
+  (`InboxWatcher`), başka yere inen indirmeleri yakalama (`DownloadCatcher`), taşıma, yeniden
+  adlandırma ve geri alma (`Sorter`), kategori işlemleri
   (`CategoryService`), var olan dosyaları içeri alma (`Importer`), ad/uzantı araması (`LibrarySearch`),
   içerik araması (`ContentSearch`), sıralama (`LibrarySort`).
 - `src/Raf.App`: WPF arayüzü. `MainWindow` tam pencere, `Views/QuickBar` kısayolla açılan arama

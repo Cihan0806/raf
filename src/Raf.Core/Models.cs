@@ -42,6 +42,12 @@ public sealed class LinkItem
     public string Path { get; set; } = "";
     public string CategoryId { get; set; } = "";
     public DateTime Added { get; set; }
+
+    /// <summary>
+    /// true ise bağlantıyı kullanıcı eklemedi; başka bir klasöre inen dosya fark edilince kendiliğinden
+    /// eklendi. Böyle bir bağlantı, dosyası silinince ya da taşınınca kendiliğinden kalkar ya da güncellenir.
+    /// </summary>
+    public bool Auto { get; set; }
 }
 
 public enum SortKey
@@ -59,6 +65,18 @@ public sealed class RafConfig
 
     /// <summary>Gelen klasörüne ek olarak izlenen klasörler. Buralarda yalnızca yeni gelenlere dokunulur.</summary>
     public List<string> WatchFolders { get; set; } = new();
+
+    /// <summary>
+    /// İnternetten indirilen dosyalar, Gelen'e ya da izlenen bir klasöre değil de başka bir yere
+    /// kaydedilse bile fark edilsin (bkz. <see cref="DownloadCatcher"/>).
+    /// </summary>
+    public bool CatchDownloads { get; set; } = true;
+
+    /// <summary>
+    /// Başka bir yere inen dosyaya ne yapılacağı: false ise kaydedildiği yerde kalır ve Raf'ta kategorisinde
+    /// bağlantı olarak görünür; true ise Gelen'e düşmüş gibi kategorisine taşınır.
+    /// </summary>
+    public bool CatchMove { get; set; }
 
     /// <summary>
     /// Ana ve alt kategoriler tek listede durur. Listedeki sıra, aynı seviyedeki kategorilerin kendi
